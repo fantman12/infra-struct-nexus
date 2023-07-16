@@ -4,7 +4,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudtrail.processinglibrary.AWSCloudTrailProcessingExecutor;
 import com.amazonaws.services.cloudtrail.processinglibrary.configuration.ClientConfiguration;
-import io.cloudtrailsqs.config.MongoConfig;
+import io.cloudtrailsqs.config.MongoDocumentConfigure;
 import io.cloudtrailsqs.event.cloudtrail.TrailEventFilter;
 import io.cloudtrailsqs.event.cloudtrail.TrailEventsProcessor;
 import io.cloudtrailsqs.event.cloudtrail.TrailProgressReporter;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReadyTrailEvent {
 
-    private final MongoConfig mongoConfig;
+    private final MongoDocumentConfigure MongoDocumentConfigure;
 
     public void trailReadyEvent(String domain, String target,
                                 Object awsIam, List<AlertRes> alerts) {
@@ -43,7 +43,7 @@ public class ReadyTrailEvent {
         basicConfig.setMaxEventsPerEmit(10000);
 
         new AWSCloudTrailProcessingExecutor
-                .Builder(new TrailEventsProcessor(mongoConfig, awsIam, alerts), basicConfig)
+                .Builder(new TrailEventsProcessor(MongoDocumentConfigure, awsIam, alerts), basicConfig)
                 .withProgressReporter(new TrailProgressReporter())
                 .withEventFilter(new TrailEventFilter())
                 .build()

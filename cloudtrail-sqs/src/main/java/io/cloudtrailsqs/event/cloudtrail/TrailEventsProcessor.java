@@ -2,7 +2,7 @@ package io.cloudtrailsqs.event.cloudtrail;
 
 import com.amazonaws.services.cloudtrail.processinglibrary.interfaces.EventsProcessor;
 import com.amazonaws.services.cloudtrail.processinglibrary.model.CloudTrailEvent;
-import io.cloudtrailsqs.config.MongoConfig;
+import io.cloudtrailsqs.config.MongoDocumentConfigure;
 import io.cloudtrailsqs.event.dto.AlertRes;
 import io.cloudtrailsqs.event.dto.EventData;
 import io.cloudtrailsqs.event.util.CloudTrailConstant;
@@ -16,12 +16,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class TrailEventsProcessor implements EventsProcessor {
-    private final MongoConfig mongoConfig;
+    private final MongoDocumentConfigure MongoDocumentConfigure;
     private final Object awsIam;
     private final List<AlertRes> alerts;
 
-    public TrailEventsProcessor(MongoConfig mongoConfig, Object awsIam, List<AlertRes> alerts) {
-        this.mongoConfig = mongoConfig;
+    public TrailEventsProcessor(MongoDocumentConfigure MongoDocumentConfigure, Object awsIam, List<AlertRes> alerts) {
+        this.MongoDocumentConfigure = MongoDocumentConfigure;
         this.awsIam = awsIam;
 
         this.alerts = alerts;
@@ -29,7 +29,7 @@ public class TrailEventsProcessor implements EventsProcessor {
 
     @Override
     public void process(List<CloudTrailEvent> events) {
-        MongoDatabase mongoDatabase = mongoConfig.getMongoClient().getDatabase(CloudTrailConstant.ALERT_MONGO_DB);
+        MongoDatabase mongoDatabase = MongoDocumentConfigure.getMongoClient().getDatabase(CloudTrailConstant.ALERT_MONGO_DB);
         MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(CloudTrailConstant.ALERT_MONGO_COLLECTION);
 
         for (CloudTrailEvent event : events) {
