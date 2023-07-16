@@ -1,0 +1,42 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+buildscript {
+	ext {
+		springBootVersion = '2.7.6'
+		gradleDependencyVersion = '1.0.11.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/"}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("io.spring.gradle:dependency-management-plugin:${gradleDependencyVersion}")
+	}
+}
+
+apply plugin: "java"
+apply plugin: 'java-library'
+apply plugin: "io.spring.dependency-management"
+
+// It's Defined SubModule Section
+subprojects {
+	group = 'io.cloudtrailsqs'
+	version = '1.0-SNAPSHOT'
+
+	apply plugin: "java"
+	apply plugin: 'java-library'
+	apply plugin: "io.spring.dependency-management"
+
+	repositories {
+		mavenCentral()
+	}
+
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+	dependencies {
+		implementation enforcedPlatform(SpringBootPlugin.BOM_COORDINATES)
+		implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+		implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+		implementation group: 'org.json', name: 'json', version: '20220924'
+	}
+}

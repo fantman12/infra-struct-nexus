@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: default
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: twseo
+      password: twseo
+      database: twseo
+      authentication-database: admin
+      uri: mongodb://${spring.data.mongodb.username}:${spring.data.mongodb.password}@${spring.data.mongodb.host}:${spring.data.mongodb.port}/${spring.data.mongodb.database}
+
+
+
+admin:
+  username: admin
+  password : eebb5911-90d3-47e3-bd15-66c1e719f4da

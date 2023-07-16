@@ -1,0 +1,65 @@
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'maven-publish'
+
+dependencies {
+	implementation project(':core-library')
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	implementation platform('software.amazon.awssdk:bom:2.18.25')
+	implementation 'software.amazon.awssdk:s3'
+	implementation 'software.amazon.awssdk:sqs'
+
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.351'
+	implementation 'com.amazonaws:aws-cloudtrail-processing-library:1.5.1'
+}
+
+jar {
+	baseName = 'cloudtrailsqs-jar'
+	version = '1.0-SNAPSHOT'
+}
+compileJava.dependsOn(processResources)
+
+clean {
+	dependsOn ":core-library:clean"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+artifacts {
+	publishing {
+		repositories {
+			maven {
+				allowInsecureProtocol true
+				url TargetDomain
+				credentials {
+					username NuserName
+					password NpassWord
+				}
+			}
+		}
+		publications {
+			maven(MavenPublication) {
+				artifact("build/libs/cloudtrailsqs-jar-1.0-SNAPSHOT-plain.jar") {
+					extension 'jar'
+				}
+			}
+		}
+	}
+
+	publishMavenPublicationToMavenRepository.dependsOn(jar)
+}
